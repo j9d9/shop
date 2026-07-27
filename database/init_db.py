@@ -29,7 +29,7 @@ def init_db():
             category = session.scalar(
                 select(Categories).filter_by(category_name=name)
             )
-
+        
             if not category:
                 category = Categories(category_name=name)
                 session.add(category)
