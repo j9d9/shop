@@ -1,13 +1,12 @@
+from os.path import join
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from database.base import engine
 from database.models import (Users, Products, Carts, Orders, Categories, FinallyCarts)
-from sqlalchemy import update, select
+from sqlalchemy import update, select, func.sum, join
 
 def get_session():
     return Session(engine)
-
-
 
 def db_register_user(full_name: str, chat_id, int):
     """registering a user in base"""
@@ -40,3 +39,19 @@ def db_create_user_cart(chat_id:int):
             return True
     except IntegrityError:
         return False
+
+        def db_get_all_category():
+            '''getting all categories'''
+            with get_session() as session:
+                query = select(Categories)
+                return  session.scalars(query).all
+
+def db_get_finally_price():
+    '''getting finalxx price'''
+    with get_session() as session:
+        query = select(func.sum(FinallyCarts.final_price)).select_from(
+            join(Carts, FinallyCarts, Carts.id == FinallyCarts.cart_id).join(Users, Users.id == Carts.user_id).where(
+                Users.telegram == chat_id)
+
+        )
+        return session.scalar(query).fetchone()[0]
