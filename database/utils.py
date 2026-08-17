@@ -55,3 +55,18 @@ def db_get_finally_price():
 
         )
         return session.scalar(query).fetchone()[0]
+
+
+    def db_get_last_orders(chat_id, limit = 10):
+        '''getting last orders'''
+        with get_session() as session:
+            query = (
+                select(Orders)
+                join(Carts, Orsers.cart_id == Cards.id)
+                join(Users, Users.id == Carts.user_id)
+                where(Users.telegram == chat_id).
+                order_by(Orders_id.desc()).
+                limit(limit)
+            )
+            return session.scalars(query).all()
+
