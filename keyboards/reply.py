@@ -28,5 +28,5 @@ def get_main_menu():
 
 def back_to_main_menu():
     builder = ReplyKeyboardBuilder()
-    builder.button(text="main menu")
+    builder.button(text="Main menu🎞️")
     return builder.as_markup(resize_keyboard=True)

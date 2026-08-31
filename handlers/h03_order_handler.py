@@ -1,19 +1,22 @@
-from aiogram import Router, F
+from aiogram import Router, F, Bot
 from aiogram.exceptions import TelegramBadRequest
-from aiogram.types import Message, ReplyKeyboardMarkup
+from aiogram.types import Message
+from database.utils import db_get_last_orders
 from keyboards.reply import back_to_main_menu
-from main import
+
+
+
 router = Router()
 
-@router.message(F.text == "buy")
-async def show_main_menu(message: Message):
+@router.message(F.text == "Buy💸")
+async def show_main_menu(message: Message, bot: Bot):
     """buying, order button"""
     chat_id = message.chat.id
     await bot.send_message(chat_id=chat_id, text="forming order:", reply_markup=back_to_main_menu)
     await message.answer(text='choose category', reply_markup=back_to_main_menu())
 
 
-@router.message(F.text == "history")
+@router.message(F.text == "History🕓")
 async def make_history(message: Message):
     '''history'''
     chat_id = message.chat.id
