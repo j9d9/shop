@@ -1,3 +1,4 @@
+from aiogram.filters import callback_data
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from database.utils import  db_get_all_category, db_get_finally_price
@@ -17,5 +18,10 @@ def create_categories_menu(chat_id)
     return builder.as_markup()
 
 def show_product_by_category(category_id):
-    pass
+    products = db_get_all_category(category_id)
+    builder = InlineKeyboardBuilder()
+    [builder.button(text=product.product_name, callback_data=f"product_{product.id}") for product in products]
+    builder.adjust(3)
+    builder.row(InlineKeyboardBuilder(text='back', callback_data = 'from_detail_to category'))
+    return builder.as_markup()
 

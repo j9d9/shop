@@ -1,3 +1,4 @@
+import callback
 from aiogram import Router, F
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import CallbackQuery, message_id, InlineKeyboardMarkup, chat_id_union
