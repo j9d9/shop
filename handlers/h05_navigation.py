@@ -1,13 +1,14 @@
-from aiogram import Router, F
+from aiogram import Router, F, Bot
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import Message
 
+from handlers.h03_order_handler import make_order
 
 router = Router()
 
-@router.message(F.text= 'back')
+@router.message(F.text=='back 🔙')
 async def return_to_category_menu(message: Message, bot: Bot):
-    try
+    try:
         await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id-1)
     except TelegramBadRequest:
         pass

@@ -33,4 +33,5 @@ def back_to_main_menu():
 
 def back():
     builder = ReplyKeyboardBuilder()
-    builder.button(text="Back🔙")
+    builder.button(text="Back 🔙")
+    return builder.as_markup(resize_keyboard=True)

@@ -69,7 +69,12 @@ def db_get_last_orders(chat_id, limit=10):
         )
         return session.scalars(query).all()
 
-    def db_get_products:
-        with get_session as session:
-            query = select(Products).where(Products.category_id == category_id)
+def db_get_products(category_id):
+    with get_session as session:
+        query = select(Products).where(Products.category_id == category_id)
         return session.scalars(query).all()
+
+def db_get_products_by_id(product_id):
+    with get_session as session:
+        query = select(Products).where(Products.id == product_id)
+        return session.scalar(query)

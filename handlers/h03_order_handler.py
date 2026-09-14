@@ -2,6 +2,7 @@ from aiogram import Router, F, Bot
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import Message
 from database.utils import db_get_last_orders
+from handlers.h02_get_contact import show_main_menu
 from keyboards.reply import back_to_main_menu
 
 
@@ -9,7 +10,7 @@ from keyboards.reply import back_to_main_menu
 router = Router()
 
 @router.message(F.text == "Buy💸")
-async def show_main_menu(message: Message, bot: Bot):
+async def make_order(message: Message, bot: Bot):
     """buying, order button"""
     chat_id = message.chat.id
     await bot.send_message(chat_id=chat_id, text="forming order:", reply_markup=back_to_main_menu)
