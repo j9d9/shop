@@ -1,4 +1,4 @@
-from aiogram.filters import callback_data
+from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from database.utils import  db_get_all_category, db_get_finally_price
@@ -22,6 +22,19 @@ def show_product_by_category(category_id):
     builder = InlineKeyboardBuilder()
     [builder.button(text=product.product_name, callback_data=f"product_{product.id}") for product in products]
     builder.adjust(3)
-    builder.row(InlineKeyboardBuilder(text='back', callback_data = 'from_detail_to category'))
+    builder.row(InlineKeyboardButton(text='back', callback_data = 'return_to category'))
     return builder.as_markup()
+
+def quantity_cart_controls(quantity = 1):
+    '''изм. кол-ва товаров в корзине'''
+    builder = InlineKeyboardBuilder()
+    builder.button(text = '➖', callback_data = 'action -')
+    builder.button(text = str(quantity), callback_data = 'quantity')
+    builder.button(text='➕', callback_data='action +')
+    builder.button(text = 'в корзину', callback_data = 'положить в корзину')
+    builder.button(text='🔙', callback_data='from_detail_to_category')
+    builder.adjust(3, 1, 1)
+    return builder.as_markup(resize_keyboard=True)
+
+
 

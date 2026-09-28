@@ -1,16 +1,19 @@
-from statistics import quantiles
-
 from aiogram import Router, F, Bot
+from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import CallbackQuery, FSInputFile, InlineKeyboardMarkup
 
-from database.utils import db_get_products_by_id
+from bot_utils.message_utils import text_for_caption
+from database.utils import db_get_products_by_id, db_get_user_cart, db_add_or_update_item, db_get_all_category
+from keyboards.inline import quantity_cart_controls, create_categories_menu
+from keyboards.reply import phone_button
 
 router = Router()
 
 
+
 @router.callback_query(F.data.startswith('product_view'))
 async def show_product_detail(callback: CallbackQuery, bot: Bot):
-    '''showing product detail'''
+    """Показ информации о продукте"""
 
     chat_id = callback.message.chat.id
     message_id = callback.message.message_id
@@ -21,13 +24,51 @@ async def show_product_detail(callback: CallbackQuery, bot: Bot):
 
     user_cart = db_get_user_cart(chat_id)
     if user_cart:
-        db_add_or_update_item()
-        caption = text_for_caption()
+        db_add_or_update_item(
+            cart_id=user_cart.cart_id,
+            product_id=product.id,
+            product_name=product.product_name,
+            product_price=product.price,
+            increment=1
+        )
+        caption = text_for_caption(
+            name=product.product_name,
+            description=product.description,
+            base_price=float(product.price),
+        )
         product_image = FSInputFile(path=product.image)
 
         await bot.send_photo(chat_id=chat_id,
-                             photo=product_image,
+                             photo=product.image,
                              caption=caption,
-                             parse_mode='html',
-                             reply_markup=quantity_cart_controll())
-        
+                             parse_mode="html",
+                             reply_markup=quantity_cart_controls())
+
+    else:
+        await ask_for_phone(chat_id, bot)
+
+async def ask_for_phone(chat_id, bot: Bot):
+        '''Запрос телефона при авторизации'''
+        await bot.send_message(chat_id=chat_id, text='Предоставьте номер телефона',
+        reply_markup=phone_button())
+
+
+
+@router.callback_query(F.data == 'from_detail_to_category')
+async def show_product_detail(callback: CallbackQuery, bot: Bot):
+    chat_id = callback.message.chat.id
+    message_id = callback.message.message_id
+
+    try:
+        await bot.delete_message(chat_id, message_id)
+    except TelegramBadRequest:
+        pass
+
+    categories = db_get_all_category()
+    if not categories:
+        await bot.send_message(chat_id=chat_id, text = 'no categories')
+        return
+
+    keyboard = create_categories_menu(chat_id)
+    await bot.send_message(chat_id=chat_id, text='choose category', reply_markup=keyboard)
+    await callback.answer()
