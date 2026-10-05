@@ -30,7 +30,7 @@ def quantity_cart_controls(quantity = 1):
     builder = InlineKeyboardBuilder()
     builder.button(text = '➖', callback_data = 'action -')
     builder.button(text = str(quantity), callback_data = 'quantity')
-    builder.button(text='➕', callback_data='action +')
+    builder.button(text='➕', callback_data='action + ')
     builder.button(text = 'в корзину', callback_data = 'положить в корзину')
     builder.button(text='🔙', callback_data='from_detail_to_category')
     builder.adjust(3, 1, 1)
