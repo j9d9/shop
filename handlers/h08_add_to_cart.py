@@ -1,5 +1,4 @@
 from aiogram import Router, F, Bot
-from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import CallbackQuery
 
 from database.utils import db_get_user_cart, db_get_product_by_name, db_add_or_update_item
@@ -33,7 +32,7 @@ async def add_to_cart(callback: CallbackQuery, bot: Bot):
         increment=0
     )
     try:
-        await bot.send_message(chat_id=chat_id, message_id=message.message_id+1)
+        await bot.send_message(chat_id=chat_id, message_id=message.message_id + 1)
     except:
         pass
     try:
