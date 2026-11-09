@@ -7,7 +7,7 @@ from database.models import Users, Carts, FinallyCarts, Categories, Products, Or
 SessionLocal = sessionmaker(
     bind=engine,
     autoflush=False,
-    autocommit=False
+    autocommit=False,
 )
 
 
